@@ -2,31 +2,20 @@
 // http://localhost:3000/isolated/exercise/04.js
 
 import React from 'react'
+import {useLocalStorageState} from '../utils'
 
 function Board() {
   // 🐨 squares is the state for this component. Add useState for squares
-  const [squares, setSquares] = React.useState(
-    () =>
-      JSON.parse(window.localStorage.getItem('squares')) || Array(9).fill(null),
+  const [squares, setSquares] = useLocalStorageState(
+    'squares',
+    Array(9).fill(null),
   )
 
-  React.useEffect(() => {
-    window.localStorage.setItem('squares', JSON.stringify(squares))
-  }, [squares])
-
-  // 🐨 We'll need the following bits of derived state:
   const nextValue = calculateNextValue(squares)
   const winner = calculateWinner(squares)
   // eslint-disable-next-line
   const status = calculateStatus(winner, squares, nextValue)
-  // - nextValue ('X' or 'O')
-  // - winner ('X', 'O', or null)
-  // - status (`Winner: ${winner}`, `Scratch: Cat's game`, or `Next player: ${nextValue}`)
-  // 💰 I've written the calculations for you! So you can use my utilities
-  // below to create these variables
 
-  // This is the function your square click handler will call. `square` should
-  // be an index. So if they click the center square, this will be `4`.
   function selectSquare(square) {
     if (winner || squares[square]) {
       return
